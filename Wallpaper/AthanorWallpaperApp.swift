@@ -13,7 +13,8 @@ struct AthanorWallpaperApp: App {
 
 /// Renders a figure at the device's exact pixel size and puts it in Photos.
 /// iOS has no way for an app to set a wallpaper itself, so the last step is
-/// yours: Photos, share sheet, Use as Wallpaper.
+/// yours: Photos, share sheet, Use as Wallpaper. The widget is the surface with
+/// no last step at all, which is why this screen points at it.
 struct WallpaperView: View {
     @State private var recipe = StillRenderer.Recipe.random(settings: SettingsStore.shared.snapshot)
     @State private var image: UIImage?
@@ -21,6 +22,7 @@ struct WallpaperView: View {
     @State private var figureID: String?
     @State private var paletteID = "auto"
     @State private var saved = false
+    @State private var showingWidgetHelp = false
     @Environment(\.displayScale) private var displayScale
 
     var body: some View {
@@ -53,6 +55,7 @@ struct WallpaperView: View {
         }
         .ignoresSafeArea()
         .statusBarHidden()
+        .sheet(isPresented: $showingWidgetHelp) { WidgetHelpView() }
     }
 
     private var controls: some View {
@@ -92,6 +95,12 @@ struct WallpaperView: View {
             }
             .buttonStyle(.borderedProminent)
             .tint(.white.opacity(0.16))
+
+            Button { showingWidgetHelp = true } label: {
+                Label("Put a figure on your Home Screen", systemImage: "square.grid.2x2")
+                    .font(.footnote)
+            }
+            .foregroundStyle(.white.opacity(0.75))
         }
         .padding(.horizontal, 20)
         .padding(.top, 18)

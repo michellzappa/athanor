@@ -58,11 +58,18 @@ way into the system screen saver on tvOS, so this is the closest thing. Select
 or play/pause on the remote skips to the next figure. Getting it onto the box
 needs a paid developer account.
 
-## iPhone wallpapers
+## iPhone
 
-`AthanorWallpaper` renders a figure at your device's exact pixel size and saves
-it to Photos. iOS does not let an app set a wallpaper itself, so the last step
-is yours: Photos, share, Use as Wallpaper.
+The widget is the surface worth having. A figure is drawn fresh every hour and
+appears on the Home Screen, on the Lock Screen under the clock, and in StandBy
+when the phone is charging on its side. Touch and hold a placed widget and
+choose Edit Widget to pin it to one figure or one ink. Lock Screen widgets are
+rendered on transparency so the system can tint them the way it tints
+everything else there.
+
+The app itself renders a figure at your device's exact pixel size and saves it
+to Photos. iOS does not let an app set a wallpaper on your behalf, so the last
+step is yours: Photos, share, Use as Wallpaper.
 
 ## Adding a figure
 

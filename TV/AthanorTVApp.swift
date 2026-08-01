@@ -23,6 +23,11 @@ struct TVRootView: View {
             .onTapGesture { host.skip() }
             .onPlayPauseCommand { host.skip() }
             .onMoveCommand { _ in host.skip() }
+            // Without this tvOS decides we are idle after a few minutes and
+            // covers the app with its own screen saver, which is the one thing
+            // this app exists to avoid.
+            .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
+            .onDisappear { UIApplication.shared.isIdleTimerDisabled = false }
     }
 }
 

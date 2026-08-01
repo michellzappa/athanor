@@ -65,6 +65,27 @@ targets:
         UIRequiredDeviceCapabilities: [arm64]
         UIUserInterfaceStyle: Dark
 
+  AthanorWidget:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: Shared
+      - path: Widget
+    settings:
+      base:
+        PRODUCT_NAME: AthanorWidget
+        PRODUCT_BUNDLE_IDENTIFIER: com.envisioning.athanor.wallpaper.widget
+        TARGETED_DEVICE_FAMILY: "1,2"
+    info:
+      path: Widget/Info.plist
+      properties:
+        CFBundleExecutable: $(EXECUTABLE_NAME)
+        CFBundleName: Athanor
+        CFBundleDisplayName: Athanor
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+
   AthanorWallpaper:
     type: application
     platform: iOS
@@ -72,6 +93,8 @@ targets:
     sources:
       - path: Shared
       - path: Wallpaper
+    dependencies:
+      - target: AthanorWidget
     settings:
       base:
         PRODUCT_NAME: Athanor

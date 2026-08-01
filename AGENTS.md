@@ -8,6 +8,7 @@ style, held, then dissolved, and another begins. Three shells over one core:
 | `AthanorSaver`     | macOS 14 | `Athanor.saver` screen saver bundle      |
 | `AthanorTV`        | tvOS 17  | full-screen app, runs until you stop it  |
 | `AthanorWallpaper` | iOS 17   | still generator, saves to Photos         |
+| `AthanorWidget`    | iOS 17   | WidgetKit extension, embedded in the above |
 
 ## Build
 
@@ -32,7 +33,8 @@ process keeps the previous bundle mapped and will otherwise serve a stale copy.
 - `Shared/Figures` — one file per figure.
 - `Shared/Hosts` — `AnimatedFigureView`, the UIKit host, behind
   `#if canImport(UIKit)`.
-- `Saver`, `TV`, `Wallpaper` — per-platform shells, nothing else.
+- `Saver`, `TV`, `Wallpaper`, `Widget` — per-platform shells, nothing else.
+  Building `AthanorWallpaper` builds and embeds `AthanorWidget` with it.
 
 The same `Shared/` directory is compiled into all three targets. That is
 deliberate: no module boundary means no `public` annotations to maintain on a
@@ -48,6 +50,27 @@ That is all. The macOS options sheet builds its checkbox list from the catalog,
 grouped by `FigureCollection`, and the iOS picker reads the same list. Empty
 collections are skipped, so `.solids`, `.tilings`, and `.curves` stay invisible
 until something lands in them.
+
+## The widget
+
+Deliberately has **no App Group**. Per-widget choices live in
+`ConfigurationIntent` instead, which is both the standard WidgetKit UX (long
+press, Edit Widget) and one less entitlement to provision. The app's own figure
+and ink pickers are separate from the widget's on purpose; they are not meant to
+be in sync.
+
+The seed is derived from the hour, not from `random()`, so the same hour always
+draws the same figure however many times WidgetKit reloads the timeline. Without
+that a reload mid-hour would swap the drawing under the user.
+
+Entries carry only a `Recipe`, never an image. WidgetKit's memory budget is
+tight and a timeline holds six entries, so the drawing happens once per rendered
+view and is cached by seed and size in `WidgetInk`.
+
+Lock Screen families (`accessoryCircular`, `accessoryRectangular`) render
+monochrome and vibrant, so they get `ground: false` — the ink on transparency,
+with `.widgetAccentable()` — and the system tints it. Passing them a composited
+image with its own near-black ground gives a grey slab.
 
 ## Icons
 
