@@ -1,0 +1,109 @@
+name: Athanor
+
+options:
+  bundleIdPrefix: com.envisioning.athanor
+  createIntermediateGroups: true
+  minimumXcodeGenVersion: "2.38"
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEAD_CODE_STRIPPING: YES
+    ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: NO
+
+targets:
+  # macOS screen saver. Shared/ holds the geometry; Saver/ is the thin shell.
+  AthanorSaver:
+    type: bundle
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: Shared
+      - path: Saver
+    settings:
+      base:
+        PRODUCT_NAME: Athanor
+        PRODUCT_BUNDLE_IDENTIFIER: com.envisioning.athanor.saver
+        WRAPPER_EXTENSION: saver
+        SKIP_INSTALL: YES
+        COMBINE_HIDPI_IMAGES: YES
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGN_IDENTITY: "-"
+        INSTALL_PATH: "$(HOME)/Library/Screen Savers"
+    info:
+      path: Saver/Info.plist
+      properties:
+        CFBundleExecutable: $(EXECUTABLE_NAME)
+        CFBundleName: Athanor
+        CFBundleDisplayName: Athanor
+        CFBundlePackageType: BNDL
+        CFBundleSignature: "????"
+        NSPrincipalClass: ATAthanorView
+        LSMinimumSystemVersion: "14.0"
+
+  AthanorTV:
+    type: application
+    platform: tvOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: Shared
+      - path: TV
+    settings:
+      base:
+        PRODUCT_NAME: Athanor
+        PRODUCT_BUNDLE_IDENTIFIER: com.envisioning.athanor.tv
+        TARGETED_DEVICE_FAMILY: "3"
+    info:
+      path: TV/Info.plist
+      properties:
+        CFBundleExecutable: $(EXECUTABLE_NAME)
+        CFBundleName: Athanor
+        CFBundleDisplayName: Athanor
+        UIRequiredDeviceCapabilities: [arm64]
+        UIUserInterfaceStyle: Dark
+
+  AthanorWallpaper:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: Shared
+      - path: Wallpaper
+    settings:
+      base:
+        PRODUCT_NAME: Athanor
+        PRODUCT_BUNDLE_IDENTIFIER: com.envisioning.athanor.wallpaper
+        TARGETED_DEVICE_FAMILY: "1,2"
+    info:
+      path: Wallpaper/Info.plist
+      properties:
+        CFBundleExecutable: $(EXECUTABLE_NAME)
+        CFBundleName: Athanor
+        CFBundleDisplayName: Athanor
+        UILaunchScreen: {}
+        UIUserInterfaceStyle: Dark
+        UIStatusBarHidden: true
+        UIViewControllerBasedStatusBarAppearance: false
+        NSPhotoLibraryAddUsageDescription: Athanor saves the figures you generate straight to your photo library.
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+
+schemes:
+  AthanorSaver:
+    build:
+      targets:
+        AthanorSaver: all
+  AthanorTV:
+    build:
+      targets:
+        AthanorTV: all
+    run:
+      config: Debug
+  AthanorWallpaper:
+    build:
+      targets:
+        AthanorWallpaper: all
+    run:
+      config: Debug

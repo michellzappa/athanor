@@ -1,0 +1,36 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate project
+        run: xcodegen generate
+
+      - name: Screen saver
+        run: |
+          xcodebuild -project Athanor.xcodeproj -scheme AthanorSaver \
+            -configuration Release -derivedDataPath build build
+
+      - name: tvOS app
+        run: |
+          xcodebuild -project Athanor.xcodeproj -scheme AthanorTV \
+            -configuration Release -sdk appletvsimulator \
+            -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
+
+      - name: iOS app
+        run: |
+          xcodebuild -project Athanor.xcodeproj -scheme AthanorWallpaper \
+            -configuration Release -sdk iphonesimulator \
+            -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
