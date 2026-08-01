@@ -32,7 +32,7 @@ final class SettingsStore {
 
     private init() {
         #if canImport(ScreenSaver)
-        let module = Bundle(for: SettingsStore.self).bundleIdentifier ?? "com.envisioning.athanor"
+        let module = Bundle(for: SettingsStore.self).bundleIdentifier ?? "com.centaur-labs.athanor"
         defaults = ScreenSaverDefaults(forModuleWithName: module) ?? .standard
         #else
         // Falls back to standard defaults when the entitlement is missing, so an

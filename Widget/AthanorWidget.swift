@@ -90,7 +90,7 @@ struct AthanorWidgetView: View {
 
 struct AthanorWidget: Widget {
     var body: some WidgetConfiguration {
-        AppIntentConfiguration(kind: "com.envisioning.athanor.figure",
+        AppIntentConfiguration(kind: "com.centaur-labs.athanor.figure",
                                intent: ConfigurationIntent.self,
                                provider: FigureProvider()) { entry in
             AthanorWidgetView(entry: entry)
