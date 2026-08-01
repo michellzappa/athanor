@@ -31,18 +31,19 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
     @Parameter(title: "Ink", optionsProvider: InkOptions())
     var ink: String?
 
-    @Parameter(title: "Construction lines", default: true)
-    var showConstruction: Bool
-
-    /// nil means let the seed choose.
+    /// nil means let the seed choose from whatever the app has in rotation.
     var figureID: String? {
         FigureCatalog.all.first { $0.title == figure }?.id
     }
 
+    /// The app's own choices are the baseline, through the shared app group.
+    /// This widget's figure and ink pin over the top of them when set, so two
+    /// widgets on the same screen can hold different figures.
     var settings: RenderSettings {
-        var settings = RenderSettings.default
-        settings.tint = Palette.all.first { $0.title == ink }?.id ?? "auto"
-        settings.showConstruction = showConstruction
+        var settings = SettingsStore.shared.snapshot
+        if let id = Palette.all.first(where: { $0.title == ink })?.id {
+            settings.tint = id
+        }
         return settings
     }
 }

@@ -12,3 +12,5 @@ Saver/Info.plist
 TV/Info.plist
 Wallpaper/Info.plist
 Widget/Info.plist
+Wallpaper/Athanor.entitlements
+Widget/AthanorWidget.entitlements

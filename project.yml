@@ -77,6 +77,11 @@ targets:
         PRODUCT_NAME: AthanorWidget
         PRODUCT_BUNDLE_IDENTIFIER: com.envisioning.athanor.wallpaper.widget
         TARGETED_DEVICE_FAMILY: "1,2"
+    entitlements:
+      path: Widget/AthanorWidget.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.centaur-labs.athanor
     info:
       path: Widget/Info.plist
       properties:
@@ -101,6 +106,11 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.envisioning.athanor.wallpaper
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         TARGETED_DEVICE_FAMILY: "1,2"
+    entitlements:
+      path: Wallpaper/Athanor.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.centaur-labs.athanor
     info:
       path: Wallpaper/Info.plist
       properties:

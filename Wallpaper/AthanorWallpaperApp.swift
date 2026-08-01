@@ -1,5 +1,6 @@
 import SwiftUI
 import UIKit
+import WidgetKit
 
 @main
 struct AthanorWallpaperApp: App {
@@ -19,8 +20,14 @@ struct WallpaperView: View {
     @State private var recipe = StillRenderer.Recipe.random(settings: SettingsStore.shared.snapshot)
     @State private var image: UIImage?
     @State private var rendering = false
-    @State private var figureID: String?
-    @State private var paletteID = "auto"
+    // Seeded from the shared store so the app opens showing what the widget is
+    // already drawing.
+    @State private var figureID: String? = {
+        let enabled = SettingsStore.shared.enabledFigureIDs
+        return enabled.count == 1 ? enabled.first : nil
+    }()
+    @State private var paletteID = SettingsStore.shared.tint
+    @State private var showConstruction = SettingsStore.shared.showConstruction
     @State private var saved = false
     @State private var showingWidgetHelp = false
     @Environment(\.displayScale) private var displayScale
@@ -62,24 +69,32 @@ struct WallpaperView: View {
         VStack(spacing: 14) {
             HStack(spacing: 10) {
                 Menu {
-                    Button("Any figure") { figureID = nil; regenerate() }
+                    Button("Any figure") { figureID = nil; apply() }
                     Divider()
                     ForEach(FigureCatalog.all, id: \.id) { kind in
-                        Button(kind.title) { figureID = kind.id; regenerate() }
+                        Button(kind.title) { figureID = kind.id; apply() }
                     }
                 } label: {
                     chip(figureID.flatMap { FigureCatalog.kind(id: $0)?.title } ?? "Any figure")
                 }
 
                 Menu {
-                    Button("Any ink") { paletteID = "auto"; regenerate() }
+                    Button("Any ink") { paletteID = "auto"; apply() }
                     Divider()
                     ForEach(Palette.all, id: \.id) { palette in
-                        Button(palette.title) { paletteID = palette.id; regenerate() }
+                        Button(palette.title) { paletteID = palette.id; apply() }
                     }
                 } label: {
                     chip(Palette.named(paletteID)?.title ?? "Any ink")
                 }
+
+                Button {
+                    showConstruction.toggle()
+                    apply()
+                } label: {
+                    chip(showConstruction ? "Guides on" : "Guides off")
+                }
+                .buttonStyle(.plain)
             }
 
             HStack(spacing: 12) {
@@ -117,11 +132,22 @@ struct WallpaperView: View {
             .foregroundStyle(.white)
     }
 
+    /// Persists the picks to the shared app group, then nudges the widgets so
+    /// what is on the Home Screen matches what is on this screen.
+    private func apply() {
+        let store = SettingsStore.shared
+        store.enabledFigureIDs = figureID.map { [$0] } ?? FigureCatalog.allIDs
+        store.tint = paletteID
+        store.showConstruction = showConstruction
+        store.synchronize()
+        WidgetCenter.shared.reloadAllTimelines()
+        regenerate()
+    }
+
     private func regenerate() {
         saved = false
-        var settings = SettingsStore.shared.snapshot
-        settings.tint = paletteID
-        recipe = StillRenderer.Recipe.random(figureID: figureID, settings: settings)
+        recipe = StillRenderer.Recipe.random(figureID: figureID,
+                                             settings: SettingsStore.shared.snapshot)
     }
 
     private func render(size: CGSize, scale: CGFloat) async {

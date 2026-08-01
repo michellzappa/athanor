@@ -5,9 +5,17 @@ import Foundation
 import ScreenSaver
 #endif
 
+/// Shared container for the iOS app and its widget. Must keep the `group.`
+/// prefix, and must be registered to the signing team with both bundle ids
+/// added to it, or device builds fail to provision.
+enum AppGroup {
+    static let identifier = "group.com.centaur-labs.athanor"
+}
+
 /// One persisted store for every platform. Inside a `.saver` bundle the defaults
 /// have to go through ScreenSaverDefaults, because the screen saver host process
-/// owns the domain; everywhere else standard defaults are right.
+/// owns the domain. On iOS they go through the app group, so what you choose in
+/// the app is what the widget draws.
 final class SettingsStore {
     static let shared = SettingsStore()
 
@@ -27,7 +35,9 @@ final class SettingsStore {
         let module = Bundle(for: SettingsStore.self).bundleIdentifier ?? "com.envisioning.athanor"
         defaults = ScreenSaverDefaults(forModuleWithName: module) ?? .standard
         #else
-        defaults = .standard
+        // Falls back to standard defaults when the entitlement is missing, so an
+        // unprovisioned build still runs instead of dying at launch.
+        defaults = UserDefaults(suiteName: AppGroup.identifier) ?? .standard
         #endif
         defaults.register(defaults: [
             Key.figures: FigureCatalog.all.map(\.id),
