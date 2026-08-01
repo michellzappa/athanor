@@ -1,0 +1,8 @@
+{
+  "layers" : [
+    { "filename" : "Front.imagestacklayer" },
+    { "filename" : "Middle.imagestacklayer" },
+    { "filename" : "Back.imagestacklayer" }
+  ],
+  "info" : { "author" : "athanor", "version" : 1 }
+}

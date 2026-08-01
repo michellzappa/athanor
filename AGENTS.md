@@ -49,7 +49,33 @@ grouped by `FigureCollection`, and the iOS picker reads the same list. Empty
 collections are skipped, so `.solids`, `.tilings`, and `.curves` stay invisible
 until something lands in them.
 
+## Icons
+
+`Scripts/make-icons.sh` regenerates every icon asset from `Shared/`, using the
+same `DrawingBuilder` and `InkRenderer` the figures use. The mark is a Seed of
+Life in the Gold Leaf palette: seven circles and a boundary, which is the most
+complex figure that still reads at 40 points. Metatron's Cube does not.
+
+Outputs, all committed:
+
+- `Assets/icon-1024.png` — master, and the README image
+- `Wallpaper/Assets.xcassets/AppIcon.appiconset`
+- `TV/Assets.xcassets/App Icon & Top Shelf Image.brandassets` — layered for the
+  tvOS parallax, plus both top shelf sizes
+
+Ink weight is expressed as a multiplier on `InkRenderer`'s base width, which is
+already proportional to the short edge, so one constant gives the same relative
+line weight at every output size. Do not hand-edit anything under those asset
+catalogs; change the generator and re-run it.
+
 ## Traps
+
+- **The tvOS platform is not installed on every machine.** Compiling Swift for
+  `appletvsimulator` works without it, but `actool` needs a tvOS simulator
+  runtime to thin the asset catalog, and a device build needs the platform.
+  Without either, `AthanorTV` fails at the asset catalog step while the other
+  two targets stay green. Installing it is a multi-GB download, so that is the
+  machine owner's call. CI covers this target.
 
 - **Unit space is y-up.** Figures are authored in a y-up plane centred on the
   origin, sized to fit a circle of radius 1. AppKit gives you that; UIKit does

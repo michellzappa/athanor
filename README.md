@@ -1,3 +1,5 @@
+<img src="Assets/icon-1024.png" alt="" width="140" align="right">
+
 # Athanor
 
 [![Build](https://github.com/michellzappa/athanor/actions/workflows/build.yml/badge.svg)](https://github.com/michellzappa/athanor/actions/workflows/build.yml)
